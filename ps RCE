@@ -10,7 +10,7 @@ $payload = @{
     content = "User: $username`nComputer: $computerName"
 } | ConvertTo-Json
 
-# Send request
+# Send requestssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
 try {
     Invoke-RestMethod -Uri $webhookUrl -Method Post -Body $payload -ContentType "application/json"
     Write-Host "Data sent successfully."
